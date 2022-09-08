@@ -3,7 +3,10 @@ import {
 } from '@sveltejs/kit/vite';
 
 const config = {
-	plugins: [sveltekit()]
+	plugins: [sveltekit()],
+	ssr: {
+		noExternal: ['devalue']
+	}
 };
 
 export default config;
