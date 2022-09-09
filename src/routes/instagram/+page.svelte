@@ -1,3 +1,28 @@
+<script>
+    let param = "";
+    let respon = null;
+    let loading = false;
+
+    const submitUrl = async (param) => {
+        try {
+            loading = true;
+            const response = await fetch(
+                "https://hadi-api.herokuapp.com/api/instagram?url=" + param,
+                {
+                    method: "GET",
+                }
+            );
+            const data = await response.json();
+            respon = data;
+            return respon;
+        } catch (error) {
+            console.log(error);
+        } finally {
+            loading = false;
+        }
+    };
+</script>
+
 <svelte:head>
     <title>Sosial Media Downloader - Instagram</title>
     <meta
@@ -9,15 +34,70 @@
 <!-- Section -->
 <section class="py-5">
     <div class="container">
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-lg-12 col-md-12 col-12">
-                <h1>Segera Hadir!</h1>
-                <p>
-                    Mohon maaf untuk layanan ini, akan hadir pada update
-                    berikutnya. Mohon bersabar.
-                </p>
+                <h1>Instagram Downloader</h1>
+                <p>Website untuk mendownload vidio dan foto Instagram.</p>
             </div>
         </div>
+        <div class="row mb-3">
+            <div class="col-lg-12 col-md-12 col-12">
+                <div class="card" id="card__form">
+                    <div class="card-body">
+                        <form on:submit|preventDefault={submitUrl(param)}>
+                            <div class="form-floating mb-3">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="instagram_link"
+                                    placeholder="Instagram link here"
+                                    bind:value={param}
+                                    autocomplete="off"
+                                    required
+                                />
+                                <label for="instagram_link"
+                                    >Instagram link here</label
+                                >
+                            </div>
+                            <div class="mb-3">
+                                <button
+                                    class="btn btn-primary btn-lg w-100"
+                                    type="submit">Download</button
+                                >
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#if loading === true}
+            <img src="/loading.svg" alt="Loading" />
+        {:else if respon != null}
+            {#if respon.status !== 200}
+                <p>{respon.msg}</p>
+            {:else if respon.status === 200}
+                <div class="row justify-content-center text-center mb-3">
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div
+                                    class="row justify-content-center text-center"
+                                >
+                                    <div class="col-lg-12 col-md-12 col-12">
+                                        <span class="title">Download :</span>
+                                        <a
+                                            class="btn btn-primary me-2 mb-2"
+                                            href={respon.result}
+                                            download>Original</a
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
+        {/if}
     </div>
 </section>
 
@@ -26,5 +106,10 @@
         background: url("../../assets/img/bg-instagram.png");
         background-size: cover;
         background-repeat: no-repeat;
+    }
+
+    img {
+        width: 90px;
+        height: auto;
     }
 </style>
