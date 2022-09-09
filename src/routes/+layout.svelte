@@ -2,6 +2,7 @@
     import "bootstrap/dist/css/bootstrap.min.css";
     import "../assets/css/app.css";
     import Navbar from "../components/Navbar.svelte";
+    import Section from "../components/Section.svelte";
 </script>
 
 <svelte:head>
@@ -19,5 +20,7 @@
 
 <Navbar />
 <main class="flex-shrink-0">
-    <slot />
+    <Section>
+        <slot />
+    </Section>
 </main>
