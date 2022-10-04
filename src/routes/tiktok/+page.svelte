@@ -8,9 +8,17 @@
         try {
             loading = true;
             const response = await fetch(
-                "https://hadi-api.herokuapp.com/api/tiktok/?url=" + param,
+                `https://tiktok-video-no-watermark2.p.rapidapi.com/?url=${encodeURIComponent(
+                    param
+                )}`,
                 {
                     method: "GET",
+                    headers: {
+                        "X-RapidAPI-Key":
+                            "db34aef518mshd72bed26734648cp1821d5jsn504923a9ae87",
+                        "X-RapidAPI-Host":
+                            "tiktok-video-no-watermark2.p.rapidapi.com",
+                    },
                 }
             );
             const data = await response.json();
@@ -72,9 +80,7 @@
 {#if loading === true}
     <img src="/loading.svg" alt="Loading" />
 {:else if respon != null}
-    {#if respon.status !== 200}
-        <p>{respon.msg}</p>
-    {:else if respon.status === 200}
+    {#if respon.msg == "success"}
         <div in:fade={{ y: -250, duration: 350, delay: 400 }}>
             <div class="row justify-content-center text-center mb-3">
                 <div class="col-lg-6 col-md-12 col-12">
@@ -82,7 +88,7 @@
                         <div class="card-body">
                             <video
                                 controls
-                                src={respon.result.video.mp4}
+                                src={respon.data.play}
                                 poster="/player.png"
                             >
                                 <track kind="captions" />
@@ -95,13 +101,13 @@
                                     <span class="title">Download :</span>
                                     <a
                                         class="btn btn-primary me-2 mb-2"
-                                        href={respon.result.audio_only.audio1}
-                                        download>Audio (Original)</a
+                                        href={respon.data.music}
+                                        target="_blank">Audio (Original)</a
                                     >
                                     <a
                                         class="btn btn-primary mb-2"
-                                        href={respon.result.video.original}
-                                        download>Video (Original)</a
+                                        href={respon.data.play}
+                                        target="_blank">Video (Original)</a
                                     >
                                 </div>
                             </div>
@@ -110,6 +116,8 @@
                 </div>
             </div>
         </div>
+    {:else}
+        <p>Gagal untuk download</p>
     {/if}
 {/if}
 
